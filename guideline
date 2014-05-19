@@ -1,0 +1,62 @@
+Rapport Polylan:
+ - Intro
+    * Architecture/design avant:
+        - Ce qui allait, ce qui n'allait pas, pourquoi?
+        - Qu'est-ce qui posait problème (grave?)
+        - Les outils utilisés, qu'est-ce qui était infaisable, qu'est-ce qui maquait?
+    * Changement dans les grandes lignes, résumé
+    * Qu'est-ce qui prends le plus de temps, pourquoi, est-ce solvable?
+ - Serveurs
+    * Infra serveurs:
+        - Combien de machines, combien de VM, quelles services par VM, quel hardware
+        - Hyperviseur pour VM vs alternative, comment deploy N VMs rapidement, outils
+        - Redondance entre serveurs pour les services, quels softwares
+        - Électricité, faites-vous attention à la consommation? Consommation totale (average)?
+    * Deployment
+        - Quels outils pour le déploiement, comment (qui pull/push?), pourquoi pas une alternative? Salt/Ansible/Puppet
+        - Gestion des configs et états des machines (+comment maintenir les configs avec les mainteneurs de paquets)
+        - Durée de vie d'une machine, comment gérer les mise à jours (destroy/recreate?)
+        - Question sécurité, ex: comment empêcher des problèmes si on a un accès root avec salt sur toutes les machines? Salt a eu un problème de sécurité récemment.
+        - Gestion du développement au sein de PolyLan, (ex: git), versionné, archivé, backups?
+        - Quel temps faut-il pour deploy ces services, si c'est long, est-ce problématique? Est-ce solvable?
+    * Monitoring
+        - Monitoring: SNMP, quels serveurs pull/push, quelles sont les data, pourquoi SNMP vs alternative, outils (Observium, est-ce que le real time apporte beaucoup?)
+        - Monitoring: quelles sont les informations les plus importantes? Pourquoi?
+        - Log: quels outils pour surveiller les logs et pourquoi est-ce utile? Real-time utile?
+        - Autres outils, ex: utilités des graphs, data en brute? Détection d'anormalité, statistiques?
+ - Routeurs/Switches
+    * Infra
+        - Réseau en arbre (graph/schéma), qu'est-ce qui est relié à quoi (copper/fiber), comment nommer, pourquoi scale ainsi, quelle capacité sur les links? Testé en pratique?
+        - Routeurs / switches, où et quel hardware/software?
+        - Protocole STP, etc? Cisco intelligent? Éviter les boucles (loop-free?)? Hardware mixte, autre chose que Cisco?
+        - Hardware cisco/autre: quelque chose à dire?
+        - Configuration cisco: quelles sont les points importants?
+        - Comment tester avant comment ça scale'ra, est-ce concluant?
+    * Subnets/NAT
+        - Quels sous-réseaux, comment relier, redondance?
+        - Comment organiser avec les joueurs répartis sur plusieurs switches
+        - Comment dupliquer des links pour que ça résiste aux links qui tombent, load-balancing, Cisco VSS
+        - Pourquoi VSS a foiré (firmware?)? Comment le détecter et le prévenir? Ou faire autrement (standalone)?
+        - Comment gérer avec le NAT? Cisco NAT table en hardware (quelle taille et capacité?), comment scale avec autant de joueurs, comment éviter que ça pète avec trop de connexions (rebooter n'est pas une solution)?
+        - Réseau internet externe (du bâtiment), combien d'ip, quel débit pour chaque link, comment load-balance (map avec les  subnets?) HTTP-proxy, QoS, priority queues?, qu'est-ce qui serait plus optimal (ex: pas de NAT/IPv6?)?
+        - Quelques stats sur la bande passante interne (globaux, intra-switchs, inter-switchs, overhead?)
+    * Authentification
+        - Radius, ce qui avait avant (comme hack) pourquoi ça scale pas/pourquoi on a besoin de logs de connexion (légalité)
+        - Autre solution que Radius? Comment ça scale, comment load-balance?
+    * Archi software
+        - Reverse-Proxy: quels services sont derrière un proxy? Quels soft comme proxy (load-balance), ex: haproxy, etc?
+        - DHCP: comment donner des IPs (subnets?), les traquer, accepter dans les firewalls, etc
+        - DNS: comment scale à l'intérieur
+        - Web: nginx, autre? Comment scale avec Python/django?
+        - Database: postgres, comment scale? memcached, etc?
+        - Firewall/routeurs software: iptables/shorewall, etc? Comment gérer avec les firewall/routeurs hardware
+        - Comment détecter le DOS, le trafic inutile ou pertubateur? Et le bloquer, par qui, où?
+        - Autres services: serveurs de jeux, FTP, DC(++), etc
+
+ - Améliorations générales
+    * Problèmes rencontrés en prod mais pas en test?
+    * Problème hardware: cables, switches cassés, disque durs, etc?
+    * Réseau, comment rendre plus robuste? Autre hardware/software?
+    * D'autres facteurs externes qui empêchent de scale (manque de matos, d'ip internet, débit, etc?)
+    * Besoin de plus de personnes dans certains domaines? Réseau, pas assez d'expert? etc
+    * Autres…
